@@ -28,12 +28,7 @@ typedef struct {
     EchonetOperation operations[10];
 } EchonetPacket;
 
-
-typedef struct {
-    int (*getProperty)(EchonetOperation *ops);
-    int (*setProperty)(EchonetOperation *ops);
-} EchonetObjectHooks;
-
+typedef struct _EchonetObjectHooks EchonetObjectHooks;
 
 typedef struct {
     uint16_t object;
@@ -44,8 +39,13 @@ typedef struct {
     uint8_t *setPropertyMap;
 } EchonetObjectConfig;
 
+typedef struct _EchonetObjectHooks {
+    int (*getProperty)(EchonetObjectConfig *object, EchonetOperation *ops);
+    int (*setProperty)(EchonetObjectConfig *object, EchonetOperation *ops);
+} EchonetObjectHooks;
+
+
 typedef struct {
-    esp_netif_t *netif;
     int objectCount;
     EchonetObjectConfig *objects;
 
@@ -53,7 +53,7 @@ typedef struct {
     uint64_t Product;
     uint64_t Serial;
 
-    int sock;
+    int _sock;
 } EchonetConfig;
 
 #ifdef __cplusplus

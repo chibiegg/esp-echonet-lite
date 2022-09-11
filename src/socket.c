@@ -2,13 +2,6 @@
 #include "echonet_internal.h"
 
 
-static esp_netif_t *get_netif()
-{
-    EchonetConfig *cfg = _el_get_config();
-    return cfg->netif;
-}
-
-
 /* Add a socket, either IPV4-only or IPV6 dual mode, to the IPV4
    multicast group */
 static int socket_add_ipv4_multicast_group(int sock, bool assign_source_if)
@@ -16,20 +9,6 @@ static int socket_add_ipv4_multicast_group(int sock, bool assign_source_if)
     struct ip_mreq imreq = { 0 };
     struct in_addr iaddr = { 0 };
     int err = 0;
-    // Configure source interface
-
-    if(0){
-        // Listen ALL interface
-        imreq.imr_interface.s_addr = IPADDR_ANY;
-        esp_netif_ip_info_t ip_info = { 0 };
-        err = esp_netif_get_ip_info(get_netif(), &ip_info);
-        if (err != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to get IP address info. Error 0x%x", err);
-            goto err;
-        }
-        inet_addr_from_ip4addr(&iaddr, &ip_info.ip);
-    }
-    
 
     // Configure multicast address to listen to
     err = inet_aton(ECHONET_MULTICAST_IPV4_ADDR, &imreq.imr_multiaddr.s_addr);

@@ -5,3 +5,4 @@ example/build
 example/sdkconfig
 .DS_Store
 dist/
+.vscode/

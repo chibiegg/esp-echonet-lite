@@ -50,8 +50,8 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
 int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, EchonetPacket *response, uint8_t *buf);
 
 // nodeprofile
-int _el_node_profile_get_property(EchonetOperation *resOps);
-int _el_node_profile_set_property(EchonetOperation *ops);
+int _el_node_profile_get_property(EchonetObjectConfig *object, EchonetOperation *resOps);
+int _el_node_profile_set_property(EchonetObjectConfig *object, EchonetOperation *ops);
 
 
 #endif /* _ECHONET_INTERNAL_H_ */

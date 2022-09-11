@@ -247,7 +247,7 @@ int echonet_send_packet(EchonetPacket *packet, struct sockaddr_in *addr) {
         ESP_LOGE(TAG, "Send mutex timeout");
         return -1;
     }
-    int err = sendto(cfg->sock, sendbuf, length, 0, (const struct sockaddr *)addr, sizeof(struct sockaddr_in));
+    int err = sendto(cfg->_sock, sendbuf, length, 0, (const struct sockaddr *)addr, sizeof(struct sockaddr_in));
     xSemaphoreGive(_sendPacketMutex);
     if (err < 0) {
         ESP_LOGE(TAG, "Error occurred during sending TID 0x%04x: errno %d", packet->transactionId, errno);

@@ -39,7 +39,7 @@ void echonet_main_task(void *pvParameters) {
             continue;
         }
         ESP_LOGD(TAG, "Create IPv4 multicast socket: %d", sock);
-        cfg->sock = sock;
+        cfg->_sock = sock;
 
         int err = echonet_nodeprofile_send_inf();
         if (err < 0) {

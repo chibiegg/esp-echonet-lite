@@ -2,7 +2,7 @@
 #include "echonet_internal.h"
 
 
-int _el_node_profile_get_property(EchonetOperation *resOps) {
+int _el_node_profile_get_property(EchonetObjectConfig *object, EchonetOperation *resOps) {
     EchonetConfig *cfg = _el_get_config();
 
     switch (resOps->property) {
@@ -102,7 +102,7 @@ int _el_node_profile_get_property(EchonetOperation *resOps) {
 }
 
 
-int _el_node_profile_set_property(EchonetOperation *ops) {
+int _el_node_profile_set_property(EchonetObjectConfig *object, EchonetOperation *ops) {
     return -1;
 }
 

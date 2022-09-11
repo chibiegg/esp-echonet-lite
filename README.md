@@ -10,15 +10,15 @@ Framework for building Echonet Lite Node for ESP-IDF.
 uint8_t operation_status = 0;
 uint8_t light_level = 0;
 
-int get_property(EchonetOperation *ops) {
+static int get_property(EchonetObjectConfig *object, EchonetOperation *ops) {
     switch (ops->property) {
         case EPCMonoFunctionalLightingOperationStatus:
-            ESP_LOGI(TAG, "Get Operation Status");
+            ESP_LOGI(TAG, "Instance %d, Get Operation Status", object->instance);
             ops->length = 1;
             ops->data[0] = operation_status;
             break;
         case EPCMonoFunctionalLightingLightLevel:
-            ESP_LOGI(TAG, "Get Light Level");
+            ESP_LOGI(TAG, "Instance %d, Get Light Level", object->instance);
             ops->length = 1;
             ops->data[0] = light_level;
             break;
@@ -28,10 +28,10 @@ int get_property(EchonetOperation *ops) {
     return 0;
 }
 
-int set_property(EchonetOperation *ops) {
+static int set_property(EchonetObjectConfig *object, EchonetOperation *ops) {
     switch (ops->property) {
         case EPCMonoFunctionalLightingOperationStatus:
-            ESP_LOGI(TAG, "Set Operation Status 0x%02x", ops->data[0]);
+            ESP_LOGI(TAG, "Instance %d, Set Operation Status 0x%02x", object->instance, ops->data[0]);
             switch(ops->data[0]){
                 case 0x30:
                 case 0x31:
@@ -42,7 +42,7 @@ int set_property(EchonetOperation *ops) {
             }
             break;
         case EPCMonoFunctionalLightingLightLevel:
-            ESP_LOGI(TAG, "Set Light Level 0x%02x", ops->data[0]);
+            ESP_LOGI(TAG, "Instance %d, Set Light Level %d%%", object->instance, ops->data[0]);
             light_level = ops->data[0];
             break;
         default:

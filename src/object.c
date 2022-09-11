@@ -90,7 +90,7 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
                         resOps->data = NULL;
                         response->service = sna_service;
                     } else {
-                        int err = object->hooks->getProperty(resOps);
+                        int err = object->hooks->getProperty(object, resOps);
                         if (err < 0){
                             resOps->length = 0;
                             resOps->data = NULL;
@@ -143,7 +143,7 @@ int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, Echon
                         memcpy(buf, ops->data, ops->length);
                         response->service = sna_service;
                     }else{
-                        int err = object->hooks->setProperty(ops);
+                        int err = object->hooks->setProperty(object, ops);
                         if (err < 0){
                             resOps->length = ops->length;
                             resOps->data = buf;
