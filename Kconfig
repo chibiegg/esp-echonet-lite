@@ -1,0 +1,19 @@
+menu "Echonet Lite"
+
+    config EL_PORT_NUM
+        int "Port number of Protocol"
+        default 3610
+
+    config EL_MULTICAST_TTL
+        int "TTL of multicast packet"
+        default 5
+
+    config EL_MAX_OPERATION_BUFFER_SIZE
+        int "Size of operation buffer"
+        default 64
+
+    config EL_MAX_WAITING_RESPONSE
+        int "Supprted number of waiting response"
+        default 4
+
+endmenu
