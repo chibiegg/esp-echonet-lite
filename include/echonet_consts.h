@@ -1,4 +1,7 @@
 
+#ifndef _ECHONET_CONSTS_H_
+#define _ECHONET_CONSTS_H_
+
 // This file is generated automaticaly
 
 #define ECHONET_LITE_DEFAULT_GET_PROPERTY_MAP 0x9d,0x9e,0x9f
@@ -824,3 +827,6 @@ typedef enum {
   EPCTvCharacterStringPresented = 0xB3,
   EPCTvLengthOfStringAccepted = 0xB4,
 } EchonetProperty;
+
+#endif /* _ECHONET_CONSTS_H_ */
+

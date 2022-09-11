@@ -119,7 +119,7 @@ void echonet_start(EchonetConfig *config) {
     xTaskCreatePinnedToCore(
         echonet_main_task,          // タスク関数
         "echonet",        // タスク名(あまり意味はない)
-        16384,           // スタックサイズ
+        4096,           // スタックサイズ
         NULL,           // 引数
         3,              // 優先度(大きい方が高い)
         &echonetMainTaskHandle,   // タスクハンドル

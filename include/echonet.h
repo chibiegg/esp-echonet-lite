@@ -1,3 +1,7 @@
+#ifndef _ECHONET_H_
+#define _ECHONET_H_
+
+
 #include "esp_netif.h"
 
 #include "lwip/err.h"
@@ -52,6 +56,9 @@ typedef struct {
     int sock;
 } EchonetConfig;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void echonet_start(EchonetConfig *config);
 int echonet_send_packet(EchonetPacket *packet, struct sockaddr_in *addr);
@@ -63,3 +70,9 @@ void echonet_prepare_packet(EchonetPacket *packet);
 void echonet_prepare_response_packet(EchonetPacket *request, EchonetPacket *response);
 void echonet_copy_packet(EchonetPacket *dst, uint8_t *buf, EchonetPacket *src);
 int echonet_nodeprofile_send_inf();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _ECHONET_H_ */

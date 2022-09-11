@@ -1,14 +1,10 @@
-set(idf_version "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}")
+set(COMPONENT_ADD_INCLUDEDIRS
+    src
+    include
+    )
+file(GLOB SRCS
+     src/*.c
+     )
+set(COMPONENT_SRCS ${SRCS})
 
-set(includes "include")
-
-set(COMPONENT_SRCS
-  src/config.c
-  src/echonet.c
-  src/packet.c
-  src/socket.c
-  src/object.c
-  src/nodeprofile.c
-)
-
-idf_component_register(SRCS ${COMPONENT_SRCS} INCLUDE_DIRS ${includes})
+register_component()

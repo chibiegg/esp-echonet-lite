@@ -1,3 +1,7 @@
+#ifndef _ECHONET_INTERNAL_H_
+#define _ECHONET_INTERNAL_H_
+
+
 #include <stdio.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -12,6 +16,13 @@
 #include <lwip/netdb.h>
 
 #define TAG "ENL"
+
+#ifndef CONFIG_EL_PORT_NUM
+#define CONFIG_EL_PORT_NUM (3610)
+#define CONFIG_EL_MULTICAST_TTL (5)
+#define CONFIG_EL_MAX_OPERATION_BUFFER_SIZE (64)
+#define CONFIG_EL_MAX_WAITING_RESPONSE (4)
+#endif
 
 #define ECHONET_MULTICAST_TTL         CONFIG_EL_MULTICAST_TTL
 #define ECHONET_UDP_PORT              CONFIG_EL_PORT_NUM
@@ -42,3 +53,5 @@ int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, Echon
 int _el_node_profile_get_property(EchonetOperation *resOps);
 int _el_node_profile_set_property(EchonetOperation *ops);
 
+
+#endif /* _ECHONET_INTERNAL_H_ */

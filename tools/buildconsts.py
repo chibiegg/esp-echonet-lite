@@ -6,6 +6,9 @@ import collections
 
 
 HEADER = """
+#ifndef _ECHONET_CONSTS_H_
+#define _ECHONET_CONSTS_H_
+
 // This file is generated automaticaly
 
 #define ECHONET_LITE_DEFAULT_GET_PROPERTY_MAP 0x9d,0x9e,0x9f
@@ -30,6 +33,10 @@ typedef enum {
     INF_SNA = 0x53,
     SetGet_SNA = 0x5E,
 } EchonetService;
+"""
+
+FOOTER = """
+#endif /* _ECHONET_CONSTS_H_ */
 """
 
 
@@ -76,6 +83,7 @@ def main():
                 )
         outfile.write("} EchonetProperty;" + "\r\n")
 
+        outfile.write(FOOTER + "\r\n")
 
     shutil.move("consts.h", "include/echonet_consts.h")
 
