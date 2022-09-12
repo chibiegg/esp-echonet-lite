@@ -33,6 +33,7 @@ typedef enum {
     INF_SNA = 0x53,
     SetGet_SNA = 0x5E,
 } EchonetService;
+
 """
 
 FOOTER = """
@@ -56,9 +57,12 @@ def main():
         epc_dict = collections.OrderedDict()
 
         outfile.write("typedef enum {" + "\r\n")
-        outfile.write("  EOJNodeProfile = 0x0EF0," + "\r\n")
         files = list(glob.glob(os.path.join(mra_data_path, "devices/*.json")))
         files.sort()
+        files = [
+            os.path.join(mra_data_path, "superClass/0x0000.json"),
+            os.path.join(mra_data_path, "nodeProfile/0x0EF0.json"),
+        ] + files
         for f in files:
             with open(f) as fp:
                 device = json.load(fp)
@@ -69,11 +73,11 @@ def main():
                 )
 
                 for prop in device["elProperties"]:
-                    epc_name = "{}{}".format(short_name, capitalize(prop["shortName"]))
+                    epc_name = "{}{}".format(short_name, capitalize(prop["shortName"])).replace("(", "").replace(")", "")
                     epc_dict[epc_name] = prop["epc"]
 
 
-        outfile.write("} EchonetObjectClass;" + "\r\n")
+        outfile.write("} EchonetObjectClass;" + "\r\n\r\n")
 
 
         outfile.write("typedef enum {" + "\r\n")
@@ -81,7 +85,7 @@ def main():
                 outfile.write(
                     "  EPC{} = {},".format(k, v) + "\r\n"
                 )
-        outfile.write("} EchonetProperty;" + "\r\n")
+        outfile.write("} EchonetProperty;" + "\r\n\r\n")
 
         outfile.write(FOOTER + "\r\n")
 

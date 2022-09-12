@@ -7,8 +7,6 @@
 #include <freertos/task.h>
 #include <esp_log.h>
 
-#include "sdkconfig.h"
-
 #include "esp_netif.h"
 #include "lwip/err.h"
 #include "lwip/sockets.h"
@@ -20,6 +18,7 @@
 #ifndef CONFIG_EL_PORT_NUM
 #define CONFIG_EL_PORT_NUM (3610)
 #define CONFIG_EL_MULTICAST_TTL (5)
+#define CONFIG_EL_MAX_OPERATION_COUNT (10)
 #define CONFIG_EL_MAX_OPERATION_BUFFER_SIZE (64)
 #define CONFIG_EL_MAX_WAITING_RESPONSE (4)
 #endif
@@ -29,8 +28,9 @@
 #define ECHONET_MULTICAST_IPV4_ADDR   "224.0.23.0"
 #define ECHONET_MULTICAST_IPV6_ADDR   "ff02::1"
 
-#define OPBUF_SIZE       CONFIG_EL_MAX_OPERATION_BUFFER_SIZE
-#define MAX_PACKET_SIZE  (12 + OPBUF_SIZE)
+#define MAX_OPERATION_COUNT CONFIG_EL_MAX_OPERATION_COUNT
+#define OPBUF_SIZE          CONFIG_EL_MAX_OPERATION_BUFFER_SIZE
+#define MAX_PACKET_SIZE     (12 + OPBUF_SIZE)
 
 // socket
 int _el_create_multicast_ipv4_socket(void);

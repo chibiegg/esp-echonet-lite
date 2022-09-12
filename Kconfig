@@ -8,6 +8,10 @@ menu "Echonet Lite"
         int "TTL of multicast packet"
         default 5
 
+    config EL_MAX_OPERATION_COUNT
+        int "Number of max operations"
+        default 10
+
     config EL_MAX_OPERATION_BUFFER_SIZE
         int "Size of operation buffer"
         default 64

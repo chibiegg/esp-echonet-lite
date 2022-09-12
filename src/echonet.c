@@ -2,6 +2,7 @@
 #include "echonet_internal.h"
 
 TaskHandle_t echonetMainTaskHandle = NULL;
+SemaphoreHandle_t _startWaitingSemaphore;
 
 void echonet_main_task(void *pvParameters) {
     const TickType_t delay = 1000 / portTICK_PERIOD_MS;
@@ -13,15 +14,15 @@ void echonet_main_task(void *pvParameters) {
     uint8_t nodeProfileInfPropertyMap[] = {0x80, 0xD5, 0x00};
     uint8_t nodeProfileGetPropertyMap[] = {0x80, 0x82, 0x83, 0x8A, 0x8C, 0x9D, 0x9E, 0x9F, 0xD3, 0xD4, 0xD6, 0xD7, 0x00};
 
+    EchonetConfig *cfg = _el_get_config();
+
     EchonetObjectConfig nodeProfileObject = {0};
     nodeProfileObject.object = EOJNodeProfile;
     nodeProfileObject.instance = 1;
     nodeProfileObject.hooks = &nodeProfileHooks;
     nodeProfileObject.infPropertyMap = nodeProfileInfPropertyMap;
     nodeProfileObject.getPropertyMap = nodeProfileGetPropertyMap;
-    
 
-    EchonetConfig *cfg = _el_get_config();
     int sock = 0;
     while(1){
         if (sock != 0) {
@@ -47,7 +48,9 @@ void echonet_main_task(void *pvParameters) {
             vTaskDelay(1000 / portTICK_PERIOD_MS);
             continue;
         }
-        
+        if (_startWaitingSemaphore != NULL) {
+            xSemaphoreGive(_startWaitingSemaphore);
+        }
 
         while (1) {
             char recvbuf[MAX_PACKET_SIZE];
@@ -110,9 +113,7 @@ void echonet_main_task(void *pvParameters) {
     }
 }
 
-
 void echonet_start(EchonetConfig *config) {
-
     _el_set_config(config);
     ESP_LOGI(TAG, "Object count: %d",config->objectCount);
 
@@ -125,4 +126,16 @@ void echonet_start(EchonetConfig *config) {
         &echonetMainTaskHandle,   // タスクハンドル
         APP_CPU_NUM     // 実行するCPU(PRO_CPU_NUM or APP_CPU_NUM)
     );
+}
+
+int echonet_start_and_wait(EchonetConfig *config, portTickType xBlockTime) {
+    if (_startWaitingSemaphore == NULL) {
+        _startWaitingSemaphore = xSemaphoreCreateBinary();
+    }
+    xSemaphoreTake(_startWaitingSemaphore, 0); // reset
+    echonet_start(config);
+    if (xSemaphoreTake(_startWaitingSemaphore, xBlockTime) != pdTRUE) {
+        return -1;
+    }
+    return 0;
 }

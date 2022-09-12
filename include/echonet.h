@@ -2,6 +2,7 @@
 #define _ECHONET_H_
 
 
+#include "sdkconfig.h"
 #include "esp_netif.h"
 
 #include "lwip/err.h"
@@ -25,8 +26,13 @@ typedef struct {
     uint8_t dstInstance;
     uint8_t service;
     uint8_t operationCount;
-    EchonetOperation operations[10];
+    EchonetOperation operations[CONFIG_EL_MAX_OPERATION_COUNT];
 } EchonetPacket;
+
+typedef struct {
+    char release;
+    uint8_t revision;
+} EchonetProtocol;
 
 typedef struct _EchonetObjectHooks EchonetObjectHooks;
 
@@ -34,6 +40,7 @@ typedef struct {
     uint16_t object;
     uint8_t instance;
     EchonetObjectHooks *hooks;
+    EchonetProtocol protocol;
     uint8_t *infPropertyMap;
     uint8_t *getPropertyMap;
     uint8_t *setPropertyMap;
@@ -61,6 +68,7 @@ extern "C" {
 #endif
 
 void echonet_start(EchonetConfig *config);
+int echonet_start_and_wait(EchonetConfig *config, portTickType xBlockTime);
 int echonet_send_packet(EchonetPacket *packet, struct sockaddr_in *addr);
 int echonet_send_packet_and_wait_response(
     EchonetPacket *request, struct sockaddr_in *addr,
@@ -68,7 +76,9 @@ int echonet_send_packet_and_wait_response(
 );
 void echonet_prepare_packet(EchonetPacket *packet);
 void echonet_prepare_response_packet(EchonetPacket *request, EchonetPacket *response);
+int echonet_packet_add_operation(EchonetPacket *packet, EchonetOperation *operation);
 void echonet_copy_packet(EchonetPacket *dst, uint8_t *buf, EchonetPacket *src);
+int echonet_build_protocol(EchonetProtocol *protocol, uint8_t *buf);
 int echonet_nodeprofile_send_inf();
 
 #ifdef __cplusplus

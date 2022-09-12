@@ -71,6 +71,20 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
         resOps->data = buf;
 
         switch (ops->property) {
+
+            case EPCCommonProtocol:
+                if (object->object == EOJNodeProfile) {
+                    // Version (NodeProfile Only)
+                    resOps->length = 4;
+                    resOps->data[0] = 0x01;
+                    resOps->data[1] = 0x00;
+                    resOps->data[2] = 0x01;
+                    resOps->data[3] = 0x00;
+                } else {
+                    // Protocol Version
+                    resOps->length = echonet_build_protocol(&object->protocol, (uint8_t *)(&resOps->data[0]));
+                }
+                break;
             case 0x9D: // 状況アナウンスプロパティマップ
                 resOps->length = _set_property_map(resOps->data, object->infPropertyMap);
                 break;
@@ -163,3 +177,10 @@ int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, Echon
     return 1;
 }
 
+int echonet_build_protocol(EchonetProtocol *protocol, uint8_t *buf) {
+    buf[0] = 0x00;
+    buf[1] = 0x00;
+    buf[2] = (uint8_t)(protocol->release);
+    buf[3] = protocol->revision;
+    return 4;
+}

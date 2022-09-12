@@ -27,7 +27,9 @@ typedef enum {
     SetGet_SNA = 0x5E,
 } EchonetService;
 
+
 typedef enum {
+  EOJCommon = 0x0000,
   EOJNodeProfile = 0x0EF0,
   EOJEmergencyButton = 0x0003,
   EOJHumanDetectionSensor = 0x0007,
@@ -79,7 +81,47 @@ typedef enum {
   EOJController = 0x05FF,
   EOJTv = 0x0602,
 } EchonetObjectClass;
+
 typedef enum {
+  EPCCommonOperationStatus = 0x80,
+  EPCCommonInstallationLocation = 0x81,
+  EPCCommonProtocol = 0x82,
+  EPCCommonId = 0x83,
+  EPCCommonInstantaneousElectricPowerConsumption = 0x84,
+  EPCCommonConsumedCumulativeElectricEnergy = 0x85,
+  EPCCommonManufacturerFaultCode = 0x86,
+  EPCCommonCurrentLimit = 0x87,
+  EPCCommonFaultStatus = 0x88,
+  EPCCommonFaultDescription = 0x89,
+  EPCCommonManufacturer = 0x8A,
+  EPCCommonBusinessFacilityCode = 0x8B,
+  EPCCommonProductCode = 0x8C,
+  EPCCommonSerialNumber = 0x8D,
+  EPCCommonProductionDate = 0x8E,
+  EPCCommonPowerSaving = 0x8F,
+  EPCCommonLocationInformation = 0x93,
+  EPCCommonRemoteControl = 0x93,
+  EPCCommonDEL = 0x9F,
+  EPCCommonCurrentDateAndTime = 0x98,
+  EPCCommonPowerLimit = 0x99,
+  EPCCommonHourMeter = 0x9A,
+  EPCNodeProfileOperatingStatus = 0x80,
+  EPCNodeProfileVersion = 0x82,
+  EPCNodeProfileId = 0x83,
+  EPCNodeProfileFaultStatus = 0x88,
+  EPCNodeProfileFaultDescription = 0x89,
+  EPCNodeProfileManufacturerMC = 0x8A,
+  EPCNodeProfileBusinessFacilityCode = 0x8B,
+  EPCNodeProfileProductCode = 0x8C,
+  EPCNodeProfileSerialNumber = 0x8D,
+  EPCNodeProfileProductionDate = 0x8E,
+  EPCNodeProfileDEL = 0x9F,
+  EPCNodeProfileUid = 0xBF,
+  EPCNodeProfileSelfNodeInstances = 0xD3,
+  EPCNodeProfileSelfNodeClasses = 0xD4,
+  EPCNodeProfileInstanceListNotification = 0xD5,
+  EPCNodeProfileSelfNodeInstanceListS = 0xD6,
+  EPCNodeProfileSelfNodeClassListS = 0xD7,
   EPCEmergencyButtonOccurrenceOfEmergency = 0xB1,
   EPCEmergencyButtonReset = 0xBF,
   EPCHumanDetectionSensorThresholdLevel = 0xB0,
@@ -827,6 +869,7 @@ typedef enum {
   EPCTvCharacterStringPresented = 0xB3,
   EPCTvLengthOfStringAccepted = 0xB4,
 } EchonetProperty;
+
 
 #endif /* _ECHONET_CONSTS_H_ */
 

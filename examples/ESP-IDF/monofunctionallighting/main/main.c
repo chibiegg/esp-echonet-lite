@@ -23,9 +23,11 @@ void send_inf(EchonetObjectConfig *object) {
   packet.service = INF;
   packet.operationCount = 1;
 
-  packet.operations[0].property = EPCMonoFunctionalLightingOperationStatus;
-  packet.operations[0].length = 1;
-  packet.operations[0].data = &operation_status_list[object->instance-1];
+  EchonetOperation ops;
+  ops.property = EPCMonoFunctionalLightingOperationStatus;
+  ops.length = 1;
+  ops.data = &operation_status_list[object->instance-1];
+  echonet_packet_add_operation(&packet, &ops);
 
   echonet_send_packet(&packet, NULL); // Multicast
 }
@@ -103,20 +105,20 @@ void app_main(void)
     uint8_t setPropertyMap[] = {EPCMonoFunctionalLightingOperationStatus, EPCMonoFunctionalLightingLightLevel, 0x00};
 
     EchonetObjectConfig objects[] = {
-        {EOJMonoFunctionalLighting, 1, &hooks, infPropertyMap, getPropertyMap, setPropertyMap},
-        {EOJMonoFunctionalLighting, 2, &hooks, infPropertyMap, getPropertyMap, setPropertyMap},
-        {EOJMonoFunctionalLighting, 3, &hooks, infPropertyMap, getPropertyMap, setPropertyMap},
+        {EOJMonoFunctionalLighting, 1, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
+        {EOJMonoFunctionalLighting, 2, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
+        {EOJMonoFunctionalLighting, 3, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
     };
 
     enconfig.objectCount = 3;
     enconfig.objects = objects;
-
+  
     enconfig.Vendor = 0x00000B;
     enconfig.Serial = 0x0123456789abcdef;
     enconfig.Product = 0xfedcba9876543210;
 
     // Start Echonet Lite Task in background
-    echonet_start(&enconfig);
+    echonet_start_and_wait(&enconfig, portMAX_DELAY);
 
     printf("Start Echonet Lite\n");
 

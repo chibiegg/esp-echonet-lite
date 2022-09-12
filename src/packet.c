@@ -47,6 +47,18 @@ void echonet_prepare_packet(EchonetPacket *packet) {
     packet->transactionId = get_next_transaction_id();
 }
 
+int echonet_packet_add_operation(EchonetPacket *packet, EchonetOperation *operation) {
+    if (packet->operationCount >= MAX_OPERATION_COUNT) {
+        // full
+        return -1;
+    }
+    int index = packet->operationCount;
+    memcpy(&packet->operations[index], operation, sizeof(EchonetOperation));
+    packet->operationCount++;
+    return index;
+}
+
+
 int _el_parse_packet(uint8_t *buf, int length, EchonetPacket *packet) {
     if (buf == NULL) {
         return -1;
