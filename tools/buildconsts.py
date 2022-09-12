@@ -34,6 +34,45 @@ typedef enum {
     SetGet_SNA = 0x5E,
 } EchonetService;
 
+typedef enum {
+    LocationLiving = 0x08,
+    LocationDinig = 0x10,
+    LocationKitchen = 0x18,
+    LocationBathroom = 0x20,
+    LocationLavatory = 0x28,
+    LocationWashroom = 0x30,
+    LocationPassageway = 0x38,
+    LocationRoom = 0x40,
+    LocationStairway = 0x48,
+    LocationFrontDoor = 0x50,
+    LocationStoreroom = 0x58,
+    LocationGarden = 0x60,
+    LocationGarage = 0x68,
+    LocationVeranda = 0x70,
+    LocationOthers = 0x78,
+    LocationIndefinite = 0xFF,
+} EchonetLocation;
+
+typedef enum {
+    EchonetNoFault = 0x42,
+    EchonetFault = 0x41,
+} EchonetFaultStatus;
+
+typedef enum {
+    FaultNone = 0x0000,
+    FaultColdReset = 0x0001,
+    FaultReset = 0x0002,
+    FaultSet = 0x0003,
+    FaultSupply = 0x0004,
+    FaultCleaning = 0x0005,
+    FaultBattery = 0x0006,
+    FaultUserDefined = 0x0009,
+    FaultAbnormal = 0x000A, // 0x000A to 0x0013
+    FaultSwitch = 0x0014,   // 0x0014 to 0x001D
+    FaultSensor = 0x001E,   // 0x001E to 0x003B
+    FaultComponent = 0x003C, // 0x003C to 0x0059
+} EchonetFaultDescription;
+
 """
 
 FOOTER = """
