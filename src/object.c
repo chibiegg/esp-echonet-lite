@@ -85,6 +85,43 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
                     resOps->length = echonet_build_protocol(&object->protocol, (uint8_t *)(&resOps->data[0]));
                 }
                 break;
+
+            case EPCCommonId: // 識別
+                resOps->length = 12;
+                resOps->data[0] = 0xfe;
+                resOps->data[1] = (uint8_t)((object->manufacturer >> 16) & 0xff);
+                resOps->data[2] = (uint8_t)((object->manufacturer >> 8) & 0xff);
+                resOps->data[3] = (uint8_t)(object->manufacturer & 0xff);
+
+                resOps->data[4] = (uint8_t)((object->serialNumber >> 56) & 0xff);
+                resOps->data[5] = (uint8_t)((object->serialNumber >> 48) & 0xff);
+                resOps->data[6] = (uint8_t)((object->serialNumber >> 40) & 0xff);
+                resOps->data[7] = (uint8_t)((object->serialNumber >> 32) & 0xff);
+                resOps->data[8] = (uint8_t)((object->serialNumber >> 24) & 0xff);
+                resOps->data[9] = (uint8_t)((object->serialNumber >> 16) & 0xff);
+                resOps->data[10] = (uint8_t)((object->serialNumber >> 8) & 0xff);
+                resOps->data[11] = (uint8_t)(object->serialNumber & 0xff);
+                break;
+
+            case EPCCommonManufacturer: // メーカーコード
+                resOps->length = 3;
+                resOps->data[0] = (uint8_t)((object->manufacturer >> 16) & 0xff);
+                resOps->data[1] = (uint8_t)((object->manufacturer >> 8) & 0xff);
+                resOps->data[2] = (uint8_t)(object->manufacturer & 0xff);
+                break;
+                
+            case EPCCommonProductCode: // 商品コード
+                resOps->length = 8;
+                resOps->data[0] = (uint8_t)((object->product >> 56) & 0xff);
+                resOps->data[1] = (uint8_t)((object->product >> 48) & 0xff);
+                resOps->data[2] = (uint8_t)((object->product >> 40) & 0xff);
+                resOps->data[3] = (uint8_t)((object->product >> 32) & 0xff);
+                resOps->data[4] = (uint8_t)((object->product >> 24) & 0xff);
+                resOps->data[5] = (uint8_t)((object->product >> 16) & 0xff);
+                resOps->data[6] = (uint8_t)((object->product >> 8) & 0xff);
+                resOps->data[7] = (uint8_t)(object->product & 0xff);
+                break;
+
             case 0x9D: // 状況アナウンスプロパティマップ
                 resOps->length = _set_property_map(resOps->data, object->infPropertyMap);
                 break;

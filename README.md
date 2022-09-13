@@ -78,9 +78,9 @@ int app_main() {
 
     enconfig.objectCount = 1;
     enconfig.objects = objects;
-    enconfig.Vendor = 0x00000B;
-    enconfig.Serial = 0x0123456789abcdef;
-    enconfig.Product = 0xfedcba9876543210;
+    enconfig.manufacturer = 0x00000B;
+    enconfig.serialNumber = 0x0123456789abcdef;
+    enconfig.product = 0xfedcba9876543210;
 
     echonet_start(&enconfig);
 

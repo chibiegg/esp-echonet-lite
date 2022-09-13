@@ -74,6 +74,7 @@ static int set_property(EchonetObjectConfig *object, EchonetOperation *ops) {
             light_level_list[object->instance-1] = ops->data[0];
             break;
         default:
+            ESP_LOGW(TAG, "Unsupported GET EPC 0x%02x", ops->property);
             return -1;
     }
     return 0;
@@ -101,22 +102,38 @@ void app_main(void)
     hooks.setProperty = set_property;
 
     uint8_t infPropertyMap[] = {EPCMonoFunctionalLightingOperationStatus, 0x00};
-    uint8_t getPropertyMap[] = {EPCMonoFunctionalLightingOperationStatus, EPCMonoFunctionalLightingLightLevel, ECHONET_LITE_DEFAULT_GET_PROPERTY_MAP, 0x00};
+    uint8_t getPropertyMap[] = {
+      EPCMonoFunctionalLightingOperationStatus, EPCMonoFunctionalLightingLightLevel,
+      0x81, 0x82, 0x83, 0x89, 0x8A, 0x8B,
+      0x9d, 0x9e, 0x9f,
+      0x00};
     uint8_t setPropertyMap[] = {EPCMonoFunctionalLightingOperationStatus, EPCMonoFunctionalLightingLightLevel, 0x00};
 
+    enconfig.manufacturer = 0xFFFF;
+    enconfig.product = 0xfedcba9876543210;
+    enconfig.serialNumber = 0x0123456789abcdef;
+
     EchonetObjectConfig objects[] = {
-        {EOJMonoFunctionalLighting, 1, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
-        {EOJMonoFunctionalLighting, 2, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
-        {EOJMonoFunctionalLighting, 3, &hooks, {'F', 0x00}, infPropertyMap, getPropertyMap, setPropertyMap},
+        {
+          EOJMonoFunctionalLighting, 1, &hooks,
+          {'M', 0x00}, enconfig.manufacturer, enconfig.product, enconfig.serialNumber,
+          infPropertyMap, getPropertyMap, setPropertyMap
+        },
+        {
+          EOJMonoFunctionalLighting, 2, &hooks,
+          {'M', 0x00}, enconfig.manufacturer, enconfig.product, enconfig.serialNumber,
+          infPropertyMap, getPropertyMap, setPropertyMap
+        },
+        {
+          EOJMonoFunctionalLighting, 3, &hooks,
+          {'M', 0x00}, enconfig.manufacturer, enconfig.product, enconfig.serialNumber,
+          infPropertyMap, getPropertyMap, setPropertyMap
+        },
     };
 
     enconfig.objectCount = 3;
     enconfig.objects = objects;
   
-    enconfig.Vendor = 0x00000B;
-    enconfig.Serial = 0x0123456789abcdef;
-    enconfig.Product = 0xfedcba9876543210;
-
     // Start Echonet Lite Task in background
     echonet_start_and_wait(&enconfig, portMAX_DELAY);
 

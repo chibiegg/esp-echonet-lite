@@ -12,7 +12,12 @@ void echonet_main_task(void *pvParameters) {
     nodeProfileHooks.setProperty = _el_node_profile_set_property;
 
     uint8_t nodeProfileInfPropertyMap[] = {0x80, 0xD5, 0x00};
-    uint8_t nodeProfileGetPropertyMap[] = {0x80, 0x82, 0x83, 0x8A, 0x8C, 0x9D, 0x9E, 0x9F, 0xD3, 0xD4, 0xD6, 0xD7, 0x00};
+    uint8_t nodeProfileGetPropertyMap[] = {
+        0x80, 0x82, 0x83, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E,
+        0x9D, 0x9E, 0x9F,
+        0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
+        0x00,
+    };
 
     EchonetConfig *cfg = _el_get_config();
 
@@ -20,6 +25,9 @@ void echonet_main_task(void *pvParameters) {
     nodeProfileObject.object = EOJNodeProfile;
     nodeProfileObject.instance = 1;
     nodeProfileObject.hooks = &nodeProfileHooks;
+    nodeProfileObject.manufacturer = cfg->manufacturer;
+    nodeProfileObject.product = cfg->product;
+    nodeProfileObject.serialNumber = cfg->serialNumber;
     nodeProfileObject.infPropertyMap = nodeProfileInfPropertyMap;
     nodeProfileObject.getPropertyMap = nodeProfileGetPropertyMap;
 

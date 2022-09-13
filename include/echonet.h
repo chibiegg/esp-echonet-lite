@@ -41,6 +41,10 @@ typedef struct {
     uint8_t instance;
     EchonetObjectHooks *hooks;
     EchonetProtocol protocol;
+    uint16_t manufacturer;
+    uint64_t product;
+    uint64_t serialNumber;
+
     uint8_t *infPropertyMap;
     uint8_t *getPropertyMap;
     uint8_t *setPropertyMap;
@@ -56,9 +60,9 @@ typedef struct {
     int objectCount;
     EchonetObjectConfig *objects;
 
-    uint16_t Vendor;
-    uint64_t Product;
-    uint64_t Serial;
+    uint16_t manufacturer;
+    uint64_t product;
+    uint64_t serialNumber;
 
     int _sock;
 } EchonetConfig;
