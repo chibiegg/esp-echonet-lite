@@ -11,6 +11,9 @@
 
 #include "echonet_consts.h"
 
+#ifndef CONFIG_EL_MAX_OPERATION_COUNT
+#define CONFIG_EL_MAX_OPERATION_COUNT (10)
+#endif
 
 typedef struct {
     uint8_t property;
