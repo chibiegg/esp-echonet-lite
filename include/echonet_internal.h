@@ -1,7 +1,6 @@
 #ifndef _ECHONET_INTERNAL_H_
 #define _ECHONET_INTERNAL_H_
 
-
 #include <stdio.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -23,14 +22,14 @@
 #define CONFIG_EL_MAX_WAITING_RESPONSE (4)
 #endif
 
-#define ECHONET_MULTICAST_TTL         CONFIG_EL_MULTICAST_TTL
-#define ECHONET_UDP_PORT              CONFIG_EL_PORT_NUM
-#define ECHONET_MULTICAST_IPV4_ADDR   "224.0.23.0"
-#define ECHONET_MULTICAST_IPV6_ADDR   "ff02::1"
+#define ECHONET_MULTICAST_TTL CONFIG_EL_MULTICAST_TTL
+#define ECHONET_UDP_PORT CONFIG_EL_PORT_NUM
+#define ECHONET_MULTICAST_IPV4_ADDR "224.0.23.0"
+#define ECHONET_MULTICAST_IPV6_ADDR "ff02::1"
 
 #define MAX_OPERATION_COUNT CONFIG_EL_MAX_OPERATION_COUNT
-#define OPBUF_SIZE          CONFIG_EL_MAX_OPERATION_BUFFER_SIZE
-#define MAX_PACKET_SIZE     (12 + OPBUF_SIZE)
+#define OPBUF_SIZE CONFIG_EL_MAX_OPERATION_BUFFER_SIZE
+#define MAX_PACKET_SIZE (12 + OPBUF_SIZE)
 
 // socket
 int _el_create_multicast_ipv4_socket(void);
@@ -52,6 +51,5 @@ int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, Echon
 // nodeprofile
 int _el_node_profile_get_property(EchonetObjectConfig *object, EchonetOperation *resOps);
 int _el_node_profile_set_property(EchonetObjectConfig *object, EchonetOperation *ops);
-
 
 #endif /* _ECHONET_INTERNAL_H_ */
