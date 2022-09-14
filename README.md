@@ -13,6 +13,10 @@ Framework for building Echonet Lite Node for ESP-IDF.
 * [Mono Function Lighting (単機能照明)](/examples/Arduino/monofunctionallighting/src/main.cpp)
 * [Electric Rain Door (電動雨戸/シャッター)](/examples/Arduino/electricraindoor/src/main.cpp)
 
+### For Arduino
+
+* [M5 Mono Function Lighting (単機能照明)](/examples/Arduino/m5-lighting/m5-lighting.ino)
+
 ## API
 
 ### Functions
