@@ -22,8 +22,7 @@ typedef enum {
 // Configure Node Profile and Objects
 EchonetConfig enconfig = {
   .manufacturer = 0x00B6,
-  .product = 0xfedcba9876543210,
-  .serialNumber = 0x0123456789abcdef,
+  .product = 1,
 };
 EchonetObjectHooks hooks = {0};
 
@@ -173,7 +172,9 @@ void setup(void)
   Serial.println(""); 
   Serial.println("WiFi connected"); 
   Serial.println("IP address: "); 
-  Serial.println(WiFi.localIP()); 
+  Serial.println(WiFi.localIP());
+  Serial.println("MAC address: ");
+  Serial.println(WiFi.macAddress());
 
   // Configure Node Profile and Objects
   hooks.getProperty = get_property;
@@ -181,6 +182,14 @@ void setup(void)
 
   enconfig.objectCount = 3;
   enconfig.objects = objects;
+
+  uint64_t serialNumber = 0;
+  uint8_t *mac = (uint8_t *)&serialNumber + 2;
+  WiFi.macAddress(mac);
+  enconfig.serialNumber = serialNumber;
+  enconfig.objects[0].serialNumber = serialNumber + 1;
+  enconfig.objects[1].serialNumber = serialNumber + 2;
+  enconfig.objects[2].serialNumber = serialNumber + 3;
 
   // Start Echonet Lite Task in background
   echonet_start_and_wait(&enconfig, portMAX_DELAY);

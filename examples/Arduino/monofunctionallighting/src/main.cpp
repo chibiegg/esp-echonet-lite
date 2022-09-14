@@ -151,16 +151,26 @@ void setup(void)
   Serial.println("WiFi connected"); 
   Serial.println("IP address: "); 
   Serial.println(WiFi.localIP()); 
+  Serial.println("MAC address: "); 
+  Serial.println(WiFi.macAddress()); 
+
 
   // Configure Node Profile and Objects
   hooks.getProperty = get_property;
   hooks.setProperty = set_property;
 
   enconfig.manufacturer = 0xFFFF;
-  enconfig.product = 0xfedcba9876543210;
-  enconfig.serialNumber = 0x0123456789abcdef;
+  enconfig.product = 1;
   enconfig.objectCount = 3;
   enconfig.objects = objects;
+
+  uint64_t serialNumber = 0;
+  uint8_t *mac = (uint8_t *)&serialNumber + 2;
+  WiFi.macAddress(mac);
+  enconfig.serialNumber = serialNumber;
+  enconfig.objects[0].serialNumber = serialNumber + 1;
+  enconfig.objects[1].serialNumber = serialNumber + 2;
+  enconfig.objects[2].serialNumber = serialNumber + 3;
 
   // Start Echonet Lite Task in background
   echonet_start_and_wait(&enconfig, portMAX_DELAY);

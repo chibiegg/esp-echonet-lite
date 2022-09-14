@@ -117,6 +117,16 @@ void echonet_main_task(void *pvParameters)
                     if (ret != 0)
                     {
                         // not waiting response packet
+
+                        // Process INF packet
+                        if (packet.service == INF)
+                        {
+                            if (cfg->hooks != NULL && cfg->hooks->onReceiveInf != NULL)
+                            {
+                                cfg->hooks->onReceiveInf(&raddr, &packet);
+                            }
+                        }
+
                         EchonetPacket responsePacket = {0};
                         uint8_t repsponseOperationsBuf[OPBUF_SIZE];
                         if (packet.dstEchonetObject == EOJNodeProfile && packet.dstInstance == 1)

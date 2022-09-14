@@ -64,13 +64,18 @@ typedef struct _EchonetObjectHooks
 
 typedef struct
 {
-    int objectCount;
-    EchonetObjectConfig *objects;
+    int (*onReceiveInf)(struct sockaddr_storage *sender, EchonetPacket *packet);
+} EchonetHooks;
 
+typedef struct
+{
     uint16_t manufacturer;
     uint64_t product;
     uint64_t serialNumber;
+    int objectCount;
+    EchonetObjectConfig *objects;
 
+    EchonetHooks *hooks;
     int _sock;
 } EchonetConfig;
 

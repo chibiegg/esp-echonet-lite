@@ -1,3 +1,2 @@
-description: ESP-IDF library for Echonet Lite.
+description: Echonet Lite library for ESP
 url: https://github.com/chibiegg/esp-echonet-lite
-version: 1.0.0

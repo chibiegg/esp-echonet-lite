@@ -137,6 +137,18 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
             resOps->data[7] = (uint8_t)(object->product & 0xff);
             break;
 
+        case EPCCommonSerialNumber: // 製造番号
+            resOps->length = 8;
+            resOps->data[0] = (uint8_t)((object->serialNumber >> 56) & 0xff);
+            resOps->data[1] = (uint8_t)((object->serialNumber >> 48) & 0xff);
+            resOps->data[2] = (uint8_t)((object->serialNumber >> 40) & 0xff);
+            resOps->data[3] = (uint8_t)((object->serialNumber >> 32) & 0xff);
+            resOps->data[4] = (uint8_t)((object->serialNumber >> 24) & 0xff);
+            resOps->data[5] = (uint8_t)((object->serialNumber >> 16) & 0xff);
+            resOps->data[6] = (uint8_t)((object->serialNumber >> 8) & 0xff);
+            resOps->data[7] = (uint8_t)(object->serialNumber & 0xff);
+            break;
+
         case 0x9D: // 状況アナウンスプロパティマップ
             resOps->length = _set_property_map(resOps->data, object->infPropertyMap);
             break;
@@ -151,7 +163,7 @@ int _el_object_on_get(EchonetObjectConfig *object, EchonetPacket *request, Echon
 
         default: // オブジェクト固有の処理
         {
-            if (object->hooks->getProperty == NULL)
+            if (object->hooks != NULL && object->hooks->getProperty == NULL)
             {
                 resOps->length = 0;
                 resOps->data = NULL;
@@ -210,7 +222,7 @@ int _el_object_on_set(EchonetObjectConfig *object, EchonetPacket *request, Echon
         {
         default:
         {
-            if (object->hooks->setProperty == NULL)
+            if (object->hooks != NULL && object->hooks->setProperty == NULL)
             {
                 resOps->length = ops->length;
                 resOps->data = buf;

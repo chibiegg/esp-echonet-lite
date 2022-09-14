@@ -1,8 +1,8 @@
 {
   "name": "esp-echonet-lite",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": "esp32, espressif, echonet",
-  "description": "ESP-IDF Library for Echonet Lite",
+  "description": "Echonet Lite library for ESP",
   "license": "MIT",
   "authors": [
     {
@@ -15,7 +15,7 @@
     "url": "https://github.com/chibiegg/esp-echonet-lite.git"
   },
   "frameworks": ["arduino", "espidf"],
-  "platforms": "espressif32",
+  "platforms": "*",
   "headers": "echonet.h",
   "build": {
     "includeDir": "./include",
