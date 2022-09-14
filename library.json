@@ -18,7 +18,7 @@
   "platforms": "*",
   "headers": "echonet.h",
   "build": {
-    "includeDir": "./include",
+    "includeDir": "./src",
     "srcDir": "./src",
     "srcFilter": []
   }

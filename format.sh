@@ -9,6 +9,6 @@ function format() {
   clang-format -i -style=file "${filename}"
 }
 
-for filename in `find ./src ./include ./examples \( -name \*.c -o -name \*.h \)`; do
+for filename in `find ./src ./examples \( -name \*.c -o -name \*.h \)`; do
   format ${filename}
 done
