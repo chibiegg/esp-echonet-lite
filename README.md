@@ -27,6 +27,7 @@ int echonet_start_and_wait(EchonetConfig *config, portTickType xBlockTime);
 int echonet_send_packet(EchonetPacket *packet, struct sockaddr_in *addr);
 int echonet_send_packet_and_wait_response(
     EchonetPacket *request, struct sockaddr_in *addr, EchonetPacket *response, uint8_t *buf);
+int echonet_send_packet_and_wait_multiple_responses(EchonetPacket *request, struct sockaddr_in *addr, OnReceiveFunction onReceive, portTickType xBlockTime);
 void echonet_prepare_packet(EchonetPacket *packet);
 void echonet_prepare_response_packet(EchonetPacket *request, EchonetPacket *response);
 int echonet_packet_add_operation(EchonetPacket *packet, EchonetOperation *operation);

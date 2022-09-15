@@ -18,6 +18,7 @@ typedef struct
 {
     uint16_t transactionId;
     SemaphoreHandle_t semaphore;
+    OnReceiveFunction onReceive;
     EchonetPacket packet;
     uint8_t buf[OPBUF_SIZE];
 } ResponseWaiting;
@@ -177,7 +178,7 @@ void echonet_copy_packet(EchonetPacket *dst, uint8_t *buf, EchonetPacket *src)
     }
 }
 
-int _el_check_waiting_packet(EchonetPacket *packet)
+int _el_check_waiting_packet(struct sockaddr_storage *addr, EchonetPacket *packet)
 {
     if (_responseWaitingsMutex == NULL)
     {
@@ -200,6 +201,7 @@ int _el_check_waiting_packet(EchonetPacket *packet)
 
         switch (packet->service)
         {
+        case INF:
         case Set_Res:
         case Get_Res:
         case INFC_Res:
@@ -214,7 +216,14 @@ int _el_check_waiting_packet(EchonetPacket *packet)
         }
 
         echonet_copy_packet(&rw->packet, (uint8_t *)(&rw->buf), packet);
-        xSemaphoreGive(rw->semaphore);
+        if (rw->onReceive != NULL)
+        {
+            rw->onReceive(addr, packet);
+        }
+        if (rw->semaphore != NULL)
+        {
+            xSemaphoreGive(rw->semaphore);
+        }
         xSemaphoreGive(_responseWaitingsMutex);
         ESP_LOGI(TAG, "Use responseWaitings[%d]", i);
         return 0;
@@ -320,14 +329,22 @@ int echonet_send_packet_and_wait_response(EchonetPacket *request, struct sockadd
             continue;
         }
         rw->transactionId = request->transactionId;
+        rw->onReceive = NULL;
         memset(rw->buf, 0x00, sizeof(rw->buf));
         memset(&rw->packet, 0x00, sizeof(rw->packet));
         responseWaiting = rw;
+        break;
+    }
+    xSemaphoreGive(_responseWaitingsMutex);
+    if (responseWaiting == NULL)
+    {
+        ESP_LOGE(TAG, "Response waiting is full");
+        return -1;
     }
 
     if (responseWaiting->semaphore == NULL)
     {
-        _responseWaitingsMutex = xSemaphoreCreateBinary();
+        responseWaiting->semaphore = xSemaphoreCreateBinary();
     }
 
     uint16_t transactionId = request->transactionId;
@@ -355,4 +372,53 @@ int echonet_send_packet_and_wait_response(EchonetPacket *request, struct sockadd
     responseWaiting->transactionId = 0;
     ESP_LOGE(TAG, "Response timeout");
     return -2;
+}
+
+int echonet_send_packet_and_wait_multiple_responses(EchonetPacket *request, struct sockaddr_in *addr, OnReceiveFunction onReceive, portTickType xBlockTime)
+{
+    if (_responseWaitingsMutex == NULL)
+    {
+        _responseWaitingsMutex = xSemaphoreCreateMutex();
+    }
+
+    if (xSemaphoreTake(_responseWaitingsMutex, 5000 / portTICK_PERIOD_MS) != pdTRUE)
+    {
+        return -1;
+    }
+
+    ResponseWaiting *responseWaiting = NULL;
+    for (int i = 0; i < CONFIG_EL_MAX_WAITING_RESPONSE; i++)
+    {
+        ResponseWaiting *rw = &_responseWaitings[i];
+        if (rw->transactionId != 0)
+        {
+            continue;
+        }
+        rw->transactionId = request->transactionId;
+        rw->onReceive = onReceive;
+        memset(rw->buf, 0x00, sizeof(rw->buf));
+        memset(&rw->packet, 0x00, sizeof(rw->packet));
+        responseWaiting = rw;
+        break;
+    }
+    xSemaphoreGive(_responseWaitingsMutex);
+    if (responseWaiting == NULL)
+    {
+        ESP_LOGE(TAG, "Response waiting is full");
+        return -1;
+    }
+
+    int err = echonet_send_packet(request, addr);
+    if (err < 0)
+    {
+        return -1;
+    }
+
+    // Waiting for response
+    vTaskDelay(xBlockTime);
+    ESP_LOGI(TAG, "Response waiting end");
+
+    responseWaiting->onReceive = NULL;
+    responseWaiting->transactionId = 0;
+    return 0;
 }
