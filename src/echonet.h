@@ -79,6 +79,8 @@ typedef struct
     int _sock;
 } EchonetConfig;
 
+typedef void (*OnReceiveFunction)(struct sockaddr_storage *addr, EchonetPacket *packet);
+
 #ifdef __cplusplus
 extern "C"
 {

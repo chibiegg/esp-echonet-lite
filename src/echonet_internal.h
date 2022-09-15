@@ -41,7 +41,7 @@ EchonetConfig *_el_get_config();
 // packet
 int _el_receive_packet(int sock, char *recvbuf, int buflen, struct sockaddr_storage *raddr);
 int _el_parse_packet(uint8_t *buf, int length, EchonetPacket *packet);
-int _el_check_waiting_packet(EchonetPacket *packet);
+int _el_check_waiting_packet(struct sockaddr_storage *addr, EchonetPacket *packet);
 
 // object
 int _el_object_process_packet(EchonetObjectConfig *object, EchonetPacket *request, EchonetPacket *response, uint8_t *buf);
